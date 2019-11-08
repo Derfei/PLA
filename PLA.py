@@ -45,7 +45,6 @@ def born_data():
 		sheet.write(i, 1, price)
 		sheet.write(i, 2, click)
 
-
 	workbook.save("pla_data.xls")
 
 #读取数据，返回一个列表
@@ -116,28 +115,41 @@ plt.scatter(x_negative, y_negative, c='grey', marker='o')
 plt.scatter(x_positive, y_positive, c='red', marker='x')
 plt.xlabel("age")
 plt.ylabel("price")
+plt.ylim([0, 1000])
+plt.xlim([0, 60])
 plt.ion()
-plt.show()
+plt.pause(1)
 
 
 #初始化权重
 weight = init_weight()
 
 #pla分类
-while cut_dot(0.999, weight, data_list, learning_rate=0.2) == False:
-	cut_dot(0.999, weight, data_list, learning_rate=0.2)
+inter = 0
+while cut_dot(0.999, weight, data_list, learning_rate=0.8) == False:
+	cut_dot(0.999, weight, data_list, learning_rate=0.8)
+	inter += 1
+	print("This is the weight: {}".format(weight))
+	#划线
+	x1 = []
+	y1 = []
+	for i in range(60):
+		x = i
+		y = (weight[1]*x - weight[0])/weight[2]
+		x1.append(x)
+		y1.append(y)
 
-print("This is the weight: {}".format(weight))
-#划线
-x1 = []
-y1 = []
-for i in range(60):
-	x = i
-	y = (weight[1]*x - weight[0])/weight[2]
-	x1.append(x)
-	y1.append(y)
+	plt.clf()
 
-plt.plot(x1, y1)
+	plt.scatter(x_negative, y_negative, c='grey', marker='o')
+	plt.scatter(x_positive, y_positive, c='red', marker='x')
+	plt.plot(x1, y1)
+	plt.ylim([0, 1000])
+	plt.xlim([0, 60])
+	plt.title("Interation {0}".format(inter))
+	plt.xlabel("age")
+	plt.ylabel("price")
+	plt.pause(0.01)
 
 print("The pla get successed!")
 plt.pause(1000)
